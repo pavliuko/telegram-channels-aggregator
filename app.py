@@ -3,6 +3,9 @@ import os
 
 from telethon import TelegramClient, events
 import openai
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Environment variables:
 # TELEGRAM_API_ID: Telegram API ID
@@ -37,6 +40,8 @@ async def main():
     client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
     await client.start()
 
+    messages = await fetch_latest_messages(client, SOURCE_CHANNELS[0])
+
     @client.on(events.NewMessage(chats=SOURCE_CHANNELS))
     async def handler(event):
         original_text = event.message.message
@@ -49,6 +54,17 @@ async def main():
 
     print('Aggregator started. Listening for new messages...')
     await client.run_until_disconnected()
+
+
+async def fetch_latest_messages(client, channel, limit=10):
+    async for message in client.iter_messages(channel, limit=limit):
+        if message.message:
+            print(f"Message: {message.message}")
+            # Optionally: translate and forward
+            translation = await translate_to_english(message.message)
+            formatted = f"Original:\n{message.message}\n\nTranslated:\n{translation}"
+            # await client.send_message(TARGET_CHANNEL, formatted)
+
 
 if __name__ == '__main__':
     asyncio.run(main())
