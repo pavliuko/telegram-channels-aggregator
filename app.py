@@ -151,7 +151,7 @@ async def main():
 
     @client.on(events.NewMessage(chats=SOURCE_CHANNELS))
     async def handler(event):
-        await process_message(db_conn, client, event.chat.message)
+        await process_message(db_conn, client, event.message)
 
     logger.info('Aggregator started. Listening for new messages...')
     await client.run_until_disconnected()
