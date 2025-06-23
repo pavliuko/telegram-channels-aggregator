@@ -1,6 +1,6 @@
-# AI News Aggregator
+# AI News Aggregator: AI Editor-in-Chief
 
-This simple script listens to a list of Telegram channels, translates each new message into English using OpenAI and forwards the original and translated text to another channel.
+This project implements an **AI Editor-in-Chief** paradigm: an automated system that monitors a list of Telegram channels (news sources), reviews each new message, translates it into English using OpenAI, and reposts both the original and translated text to a designated Telegram channel. The AI acts as an editor-in-chief, curating and distributing news to your audience.
 
 ## Setup
 1. Install Python 3.8+ and the dependencies:
@@ -25,4 +25,4 @@ python app.py
 
 `SOURCE_CHANNELS` should be a comma‑separated list of channel usernames or IDs. The account must have access to these channels.
 
-The script will listen for new messages, translate them to English and post the original text with its translation to the target channel.
+The AI Editor-in-Chief will listen for new messages from the source channels, translate them to English, and repost the original text along with its translation to the target channel. This mimics the workflow of a human editor-in-chief, ensuring your Telegram channel receives curated, translated news updates automatically.
