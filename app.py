@@ -138,7 +138,7 @@ async def forward_message_with_media(client, original_message, translated_text, 
         if len(formatted_text) > 4096:
             logger.warning(f"Message too long: {formatted_text}, skipping")
         else:
-            client.send_message(target_channel, formatted_text)
+            await client.send_message(target_channel, formatted_text)
 
 
 async def main():
