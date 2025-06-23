@@ -1,6 +1,8 @@
-# AI News Aggregator: AI Editor-in-Chief
+# News Aggregator: AI Editor-in-Chief
 
 This project implements an **AI Editor-in-Chief** paradigm: an automated system that monitors a list of Telegram channels (news sources), reviews each new message, translates it into English using OpenAI, and reposts both the original and translated text to a designated Telegram channel. The AI acts as an editor-in-chief, curating and distributing news to your audience.
+
+The Bot receives updates from multiple sources (in the current version: telegram channels), and forwards them to other telegram channel.
 
 ## Setup
 1. Install Python 3.8+ and the dependencies:
