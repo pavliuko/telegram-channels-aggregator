@@ -40,6 +40,14 @@ def init_db(db_path='processed_messages.db'):
                     message_id INTEGER,
                     PRIMARY KEY (channel, message_id)
                 )''')
+    c.execute('''CREATE TABLE IF NOT EXISTS editor_decisions (
+                    channel TEXT,
+                    message_id INTEGER,
+                    original_text TEXT,
+                    decision_json TEXT,
+                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (channel, message_id)
+                )''')
     conn.commit()
     return conn
 
@@ -51,6 +59,16 @@ def is_processed(conn, channel, message_id):
 def mark_processed(conn, channel, message_id):
     c = conn.cursor()
     c.execute('INSERT OR IGNORE INTO processed_messages (channel, message_id) VALUES (?, ?)', (channel, message_id))
+    conn.commit()
+
+def save_editor_decision(conn, channel, message_id, original_text, decision_json, timestamp=None):
+    c = conn.cursor()
+    if timestamp is None:
+        c.execute('''INSERT OR REPLACE INTO editor_decisions (channel, message_id, original_text, decision_json)
+                     VALUES (?, ?, ?, ?)''', (channel, message_id, original_text, decision_json))
+    else:
+        c.execute('''INSERT OR REPLACE INTO editor_decisions (channel, message_id, original_text, decision_json, timestamp)
+                     VALUES (?, ?, ?, ?, ?)''', (channel, message_id, original_text, decision_json, timestamp))
     conn.commit()
 
 async def ai_editor_in_chief(text: str) -> Dict[str, str] | None:
@@ -133,24 +151,7 @@ async def main():
 
     @client.on(events.NewMessage(chats=SOURCE_CHANNELS))
     async def handler(event):
-
         await process_message(db_conn, client, event.chat.message)
-
-        # channel = event.chat.username if event.chat and event.chat.username else str(event.chat_id)
-        # message_id = event.message.id
-        # if is_processed(db_conn, channel, message_id):
-        #     return
-        # original_text = event.message.text
-        # if not original_text:
-        #     return
-        # # Translate to English
-        # editor_resonse = await ai_editor_in_chief(original_text)
-        #
-        # if editor_resonse["Decision"] == "REPOST":
-        #     # Forward message with media
-        #     await forward_message_with_media(client, event.message, editor_resonse["Translated News"], TARGET_CHANNEL)
-        #
-        # mark_processed(db_conn, channel, message_id)
 
     logger.info('Aggregator started. Listening for new messages...')
     await client.run_until_disconnected()
@@ -168,11 +169,12 @@ async def process_message(db_conn, client, message):
             return
 
     editor_resonse = await ai_editor_in_chief(message.text)
-    if editor_resonse["Decision"] == "REPOST":
+    if editor_resonse and editor_resonse.get("Decision") == "REPOST":
         await forward_message_with_media(client, message, editor_resonse["Translated News"], TARGET_CHANNEL)
 
     if db_conn:
         mark_processed(db_conn, channel_id, message.id)
+        save_editor_decision(db_conn, channel_id, message.id, message.text, json.dumps(editor_resonse))
 
 
 def get_author_info(message):
