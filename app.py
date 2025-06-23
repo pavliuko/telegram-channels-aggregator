@@ -1,12 +1,18 @@
 import asyncio
+import json
 import os
 import sqlite3
+from logging import getLogger
+from typing import Dict
 
 from telethon import TelegramClient, events
+from telethon.tl.types import MessageMediaWebPage
 import openai
 from dotenv import load_dotenv
 
 load_dotenv()
+
+logger = getLogger(__name__)
 
 # Environment variables:
 # TELEGRAM_API_ID: Telegram API ID
@@ -16,6 +22,7 @@ load_dotenv()
 # OPENAI_API_KEY: key for OpenAI API
 # SESSION_NAME (optional): session name or path for Telethon
 
+MAX_MESSAGE_LENGTH = 4096
 API_ID = int(os.environ['TELEGRAM_API_ID'])
 API_HASH = os.environ['TELEGRAM_API_HASH']
 SOURCE_CHANNELS = [ch.strip() for ch in os.environ['SOURCE_CHANNELS'].split(',') if ch.strip()]
@@ -46,18 +53,50 @@ def mark_processed(conn, channel, message_id):
     c.execute('INSERT OR IGNORE INTO processed_messages (channel, message_id) VALUES (?, ?)', (channel, message_id))
     conn.commit()
 
-async def translate_to_english(text: str) -> str:
-    if not text.strip():
-        return text
+async def ai_editor_in_chief(text: str) -> Dict[str, str] | None:
+    system_prompt = """
+    You are an AI agent acting as an editor-in-chief of a curated international news channel. Your task is to evaluate news items from various sources and decide whether each item should be reposted to the audience of the channel.
+
+    Here are your responsibilities:
+    
+    1. **Translation**: News items may be in different languages. Always translate them into fluent, clear English. If the original message includes any **links** to websites or other telegram chats or channels, they must be preserved and included in the translated version. All links must be included.
+    2. **Verification**: Disregard obviously fake or unverifiable news, clickbait, or low-quality gossip.
+    3. **Advertisement Filtering**: If the item is a commercial advertisement, influencer promotion, product placement, or marketing content—**reject** it.
+    4. **Event Relevance**: Only include events if they are international or relevant to audiences in the US, Europe, or Asia. Local events should be **excluded**, unless they have global significance.
+    5. **Geopolitical Filter**: Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia (unless the news is critically important and globally covered).
+    6. **Editorial Judgment**: Prioritize news that is informative, globally relevant, and of high journalistic quality. Prefer original reporting over reposts or aggregations.
+    7. **Repost Decision**: At the end, decide whether the news should be **reposted** or **rejected**, and explain why in 1–2 sentences.
+    
+    Be strict and professional in your decisions. The goal is to maintain a high-quality international feed for an informed audience.
+    
+    Format your response in the following structure in JSON format:
+    
+    Original Language: [Detected language]
+    Translated News: [English translation]
+    Content Type: [e.g. Political News, Product Promo, Local Event, Global Event, Social Post, etc.]
+    Decision: [REPOST or REJECT]
+    Reasoning: [Concise editorial justification]
+    
+    """
+
     response = await openai_client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Translate the following text to English."},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": text},
         ],
     )
     content = response.choices[0].message.content
-    return content.strip() if content else text
+    if "```json" in content:
+        content = content.split("```json")[1].split("```")[0]
+
+    try:
+        content = json.loads(content)
+    except json.decoder.JSONDecodeError as e:
+        logger.warning(f"Cannot decode JSON response: {e}")
+        return None
+
+    return content
 
 async def forward_message_with_media(client, original_message, translated_text, target_channel):
     """Forward a message with its media content and translated text"""
@@ -65,7 +104,7 @@ async def forward_message_with_media(client, original_message, translated_text, 
     formatted_text = f"{translated_text}\n\nAuthor: {author_info}"
     
     # Check if the message has media
-    if original_message.media:
+    if original_message.media and not isinstance(original_message.media, MessageMediaWebPage):
         try:
             # Forward the media with the translated caption
             await client.send_file(
@@ -74,53 +113,67 @@ async def forward_message_with_media(client, original_message, translated_text, 
                 caption=formatted_text
             )
         except Exception as e:
-            print(f"Error forwarding media: {e}")
+            logger.warning(f"Error forwarding media: {e}")
             # Fallback: send text only if media forwarding fails
             await client.send_message(target_channel, formatted_text)
     else:
-        # No media, just send the text
-        await client.send_message(target_channel, formatted_text)
+        if len(formatted_text) > 4096:
+            logger.warning(f"Message too long: {formatted_text}, skipping")
+        else:
+            client.send_message(target_channel, formatted_text)
+
 
 async def main():
     client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
     await client.start()
 
     db_conn = init_db()
-    await fetch_latest_messages(client, SOURCE_CHANNELS[0], db_conn)
+    for channel in SOURCE_CHANNELS:
+        await fetch_latest_messages(client, channel, db_conn)
 
     @client.on(events.NewMessage(chats=SOURCE_CHANNELS))
     async def handler(event):
-        channel = event.chat.username if event.chat and event.chat.username else str(event.chat_id)
-        message_id = event.message.id
-        if is_processed(db_conn, channel, message_id):
-            return
-        original_text = event.message.message
-        if not original_text:
-            return
-        # Translate to English
-        translation = await translate_to_english(original_text)
-        # Forward message with media
-        await forward_message_with_media(client, event.message, translation, TARGET_CHANNEL)
-        mark_processed(db_conn, channel, message_id)
 
-    print('Aggregator started. Listening for new messages...')
+        await process_message(db_conn, client, event.chat.message)
+
+        # channel = event.chat.username if event.chat and event.chat.username else str(event.chat_id)
+        # message_id = event.message.id
+        # if is_processed(db_conn, channel, message_id):
+        #     return
+        # original_text = event.message.text
+        # if not original_text:
+        #     return
+        # # Translate to English
+        # editor_resonse = await ai_editor_in_chief(original_text)
+        #
+        # if editor_resonse["Decision"] == "REPOST":
+        #     # Forward message with media
+        #     await forward_message_with_media(client, event.message, editor_resonse["Translated News"], TARGET_CHANNEL)
+        #
+        # mark_processed(db_conn, channel, message_id)
+
+    logger.info('Aggregator started. Listening for new messages...')
     await client.run_until_disconnected()
 
 
 async def fetch_latest_messages(client, channel, db_conn, limit=10):
     async for message in client.iter_messages(channel, limit=limit):
         if message.message:
-            channel_id = message.chat.username if message.chat and message.chat.username else str(message.chat_id)
-            if db_conn:
-                if is_processed(db_conn, channel_id, message.id):
-                    continue
-            print(f"Message: {message.message}")
-            # Optionally: translate and forward
-            translation = await translate_to_english(message.message)
-            # Forward message with media
-            await forward_message_with_media(client, message, translation, TARGET_CHANNEL)
-            if db_conn:
-                mark_processed(db_conn, channel_id, message.id)
+            await process_message(db_conn, client, message)
+
+async def process_message(db_conn, client, message):
+    channel_id = message.chat.username if message.chat and message.chat.username else str(message.chat_id)
+    if db_conn:
+        if is_processed(db_conn, channel_id, message.id):
+            return
+
+    editor_resonse = await ai_editor_in_chief(message.text)
+    if editor_resonse["Decision"] == "REPOST":
+        await forward_message_with_media(client, message, editor_resonse["Translated News"], TARGET_CHANNEL)
+
+    if db_conn:
+        mark_processed(db_conn, channel_id, message.id)
+
 
 def get_author_info(message):
     # Handle author information properly for Telethon
