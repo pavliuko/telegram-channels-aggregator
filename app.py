@@ -86,7 +86,6 @@ def save_editor_decision(conn, channel, message_id, original_text, decision_json
     conn.commit()
 
 
-
 async def ai_editor_in_chief(text: str) -> Dict[str, str] | None:
     # Use the globally loaded system prompt
     global SYSTEM_PROMPT
