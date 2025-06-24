@@ -2,15 +2,23 @@ import asyncio
 import json
 import os
 import sqlite3
+import logging
+import openai
+
 from logging import getLogger
 from typing import Dict
-
 from telethon import TelegramClient, events
 from telethon.tl.types import MessageMediaWebPage
-import openai
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Set up logging level from environment variable
+LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO').upper()
+logging.basicConfig(
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+)
 
 logger = getLogger(__name__)
 
@@ -171,6 +179,9 @@ async def process_message(db_conn, client, message):
     editor_resonse = await ai_editor_in_chief(message.text)
     if editor_resonse and editor_resonse.get("Decision") == "REPOST":
         await forward_message_with_media(client, message, editor_resonse["Translated News"], TARGET_CHANNEL)
+        logger.info(f"Reposting message:\n{editor_resonse['Translated News']}")
+    else:
+        logger.info(f"Rejecting message:\n{editor_resonse['Translated News']}\nReason:\n{editor_resonse['Reasoning']}")
 
     if db_conn:
         mark_processed(db_conn, channel_id, message.id)
