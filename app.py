@@ -4,6 +4,7 @@ import os
 import sqlite3
 import logging
 import openai
+import sys
 
 from logging import getLogger
 from typing import Dict
@@ -17,7 +18,8 @@ load_dotenv()
 LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO').upper()
 logging.basicConfig(
     level=getattr(logging, LOG_LEVEL, logging.INFO),
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    stream=sys.stdout
 )
 
 logger = getLogger(__name__)
