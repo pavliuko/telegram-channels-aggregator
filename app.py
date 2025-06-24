@@ -11,6 +11,7 @@ from typing import Dict
 from telethon import TelegramClient, events
 from telethon.tl.types import MessageMediaWebPage
 from dotenv import load_dotenv
+from system_prompt_manager import load_configured_system_prompt
 
 load_dotenv()
 
@@ -84,24 +85,7 @@ def save_editor_decision(conn, channel, message_id, original_text, decision_json
                      VALUES (?, ?, ?, ?, ?)''', (channel, message_id, original_text, decision_json, timestamp))
     conn.commit()
 
-def load_system_prompt(file_path='system_prompt.txt') -> str:
-    """Load system prompt from external file with error handling"""
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            system_prompt = f.read().strip()
-    except FileNotFoundError:
-        logger.error(f"{file_path} file not found")
-        raise FileNotFoundError(f"Critical error: {file_path} file not found. Application cannot continue.")
-    except Exception as e:
-        logger.error(f"Error reading system prompt file: {e}")
-        raise Exception(f"Critical error reading system prompt file: {e}. Application cannot continue.")
-    
-    # Check if the system prompt is empty
-    if not system_prompt:
-        logger.error(f"{file_path} file is empty")
-        raise ValueError(f"Critical error: {file_path} file is empty. Application cannot continue.")
-    
-    return system_prompt
+
 
 async def ai_editor_in_chief(text: str) -> Dict[str, str] | None:
     # Use the globally loaded system prompt
@@ -154,8 +138,8 @@ async def forward_message_with_media(client, original_message, translated_text, 
 async def main():
     # Initialize system prompt at startup
     global SYSTEM_PROMPT
-    SYSTEM_PROMPT = load_system_prompt()
-    logger.info("System prompt loaded successfully")
+    SYSTEM_PROMPT = load_configured_system_prompt()
+    logger.info(f"System prompt successfully loaded and configured:\n{SYSTEM_PROMPT}")
     
     client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
     await client.start()

@@ -4,5 +4,4 @@
 .env
 *.pem
 *.db
-system_prompt.txt
 .cursor
