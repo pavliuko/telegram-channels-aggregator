@@ -42,6 +42,9 @@ SESSION_NAME = os.environ.get('SESSION_NAME', 'aggregator')
 
 openai_client = openai.AsyncOpenAI(api_key=OPENAI_API_KEY)
 
+# Global variable to store the system prompt
+SYSTEM_PROMPT = None
+
 def init_db(db_path='processed_messages.db'):
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
@@ -81,36 +84,33 @@ def save_editor_decision(conn, channel, message_id, original_text, decision_json
                      VALUES (?, ?, ?, ?, ?)''', (channel, message_id, original_text, decision_json, timestamp))
     conn.commit()
 
-async def ai_editor_in_chief(text: str) -> Dict[str, str] | None:
-    system_prompt = """
-    You are an AI agent acting as an editor-in-chief of a curated international news channel. Your task is to evaluate news items from various sources and decide whether each item should be reposted to the audience of the channel.
+def load_system_prompt(file_path='system_prompt.txt') -> str:
+    """Load system prompt from external file with error handling"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            system_prompt = f.read().strip()
+    except FileNotFoundError:
+        logger.error(f"{file_path} file not found")
+        raise FileNotFoundError(f"Critical error: {file_path} file not found. Application cannot continue.")
+    except Exception as e:
+        logger.error(f"Error reading system prompt file: {e}")
+        raise Exception(f"Critical error reading system prompt file: {e}. Application cannot continue.")
+    
+    # Check if the system prompt is empty
+    if not system_prompt:
+        logger.error(f"{file_path} file is empty")
+        raise ValueError(f"Critical error: {file_path} file is empty. Application cannot continue.")
+    
+    return system_prompt
 
-    Here are your responsibilities:
-    
-    1. **Translation**: News items may be in different languages. Always translate them into fluent, clear English. If the original message includes any **links** to websites or other telegram chats or channels, they must be preserved and included in the translated version. All links must be included.
-    2. **Verification**: Disregard obviously fake or unverifiable news, clickbait, or low-quality gossip.
-    3. **Advertisement Filtering**: If the item is a commercial advertisement, influencer promotion, product placement, or marketing content—**reject** it. However, personal opinions or reviews about existing products are allowed, as long as the tone is editorial and not promotional in nature.
-    4. **Event Relevance**: Only include events if they are international or relevant to audiences in the US, Europe, or Asia. Local events should be **excluded**, unless they have global significance.
-    5. **Geopolitical Filter**: Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia (unless the news is critically important and globally covered).
-    6. **Editorial Judgment**: Prioritize news that is informative, globally relevant, and of high journalistic quality. Prefer original reporting over reposts or aggregations.
-    7. **Repost Decision**: At the end, decide whether the news should be **reposted** or **rejected**, and explain why in 1–2 sentences.
-    
-    Be strict and professional in your decisions. The goal is to maintain a high-quality international feed for an informed audience.
-    
-    Format your response in the following structure in JSON format:
-    
-    Original Language: [Detected language]
-    Translated News: [English translation]
-    Content Type: [e.g. Political News, Product Promo, Local Event, Global Event, Social Post, etc.]
-    Decision: [REPOST or REJECT]
-    Reasoning: [Concise editorial justification]
-    
-    """
+async def ai_editor_in_chief(text: str) -> Dict[str, str] | None:
+    # Use the globally loaded system prompt
+    global SYSTEM_PROMPT
 
     response = await openai_client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": system_prompt},
+            {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": text},
         ],
     )
@@ -152,6 +152,11 @@ async def forward_message_with_media(client, original_message, translated_text, 
 
 
 async def main():
+    # Initialize system prompt at startup
+    global SYSTEM_PROMPT
+    SYSTEM_PROMPT = load_system_prompt()
+    logger.info("System prompt loaded successfully")
+    
     client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
     await client.start()
 

@@ -4,3 +4,5 @@
 .env
 *.pem
 *.db
+system_prompt.local.txt
+.cursor
