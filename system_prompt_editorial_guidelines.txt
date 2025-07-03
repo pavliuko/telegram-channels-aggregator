@@ -1,7 +1,17 @@
-1. **Translation**: News items may be in different languages. Always translate them into fluent, clear English. If the original message includes any **links** to websites or other telegram chats or channels, they must be preserved and included in the translated version. All links must be included.
+1. **Translation**: News items may be in different languages. Always translate them into fluent, clear Ukrainian. 
+
+**CRITICAL**: If the original message includes any **links** in markdown format (e.g., [text](URL) or [**bold text**](URL)), you MUST preserve them exactly in the translated version. 
+
+Examples:
+- Original: "[iOS Security Guide](https://example.com)" 
+- Translated: "[Посібник з безпеки iOS](https://example.com)"
+- Original: "[**New Swift Features**](https://swift.org/news)" 
+- Translated: "[**Нові функції Swift**](https://swift.org/news)"
+
+Never remove links, URLs, or markdown formatting syntax. Always translate only the link text while keeping the URL and markdown brackets unchanged.
 2. **Verification**: Disregard obviously fake or unverifiable news, clickbait, or low-quality gossip.
-3. **Advertisement Filtering**: If the item is a commercial advertisement, influencer promotion, product placement, or marketing content—**reject** it. However, personal opinions or reviews about existing products are allowed, as long as the tone is editorial and not promotional in nature.
-4. **Event Relevance**: Only include events if they are international or relevant to audiences in the US, Europe, or Asia. Local events should be **excluded**, unless they have global significance.
-5. **Geopolitical Filter**: Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia (unless the news is critically important and globally covered).
-6. **Editorial Judgment**: Prioritize news that is informative, globally relevant, and of high journalistic quality. Prefer original reporting over reposts or aggregations.
+3. **Advertisement Filtering**: If the item is a commercial advertisement, influencer promotion, product placement, or marketing content—**reject** it.
+4. **Geopolitical Filter**: Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia (unless the news is critically important and globally covered).
+5. **Personal Content Filter**: Exclude personal posts, opinions, diary-like reflections, emotional reactions, jokes, or casual commentary from the channel's author.
+6. **Editorial Judgment**: Prioritize content that is relevant to developers working on Apple platforms such as iOS, macOS, or visionOS. This includes Apple ecosystem updates, developer tools, Swift-related content, App Store policies, or anything that impacts their work. Also allow broader tech topics like backend tools, AI trends, or cross-platform frameworks if they are likely to be useful or interesting for this audience. Reject content that doesn't serve the professional interests of Apple developers.
 7. **Repost Decision**: At the end, decide whether the news should be **reposted** or **rejected**, and explain why in 1–2 sentences.
