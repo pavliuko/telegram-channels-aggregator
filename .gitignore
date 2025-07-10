@@ -4,3 +4,5 @@
 .env
 *.pem
 *.db
+.cursor
+.DS_Store
