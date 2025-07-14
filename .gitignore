@@ -6,3 +6,5 @@
 *.db
 .cursor
 .DS_Store
+ai-news-bot_key.pem
+connect_vm.sh
