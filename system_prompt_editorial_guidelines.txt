@@ -1,17 +1,35 @@
-1. **Translation**: News items may be in different languages. Always translate them into fluent, clear Ukrainian. 
+1. **Translation**: News items may be in different languages. Always translate them into fluent, clear English.
 
-**CRITICAL**: If the original message includes any **links** in markdown format (e.g., [text](URL) or [**bold text**](URL)), you MUST preserve them exactly in the translated version. 
+**CRITICAL**: If the original message includes any **links** in markdown format (e.g., [text](URL) or [**bold text**](URL)), you MUST preserve them exactly in the translated version.
 
 Examples:
-- Original: "[iOS Security Guide](https://example.com)" 
-- Translated: "[Посібник з безпеки iOS](https://example.com)"
-- Original: "[**New Swift Features**](https://swift.org/news)" 
-- Translated: "[**Нові функції Swift**](https://swift.org/news)"
+
+* Original: "[ИИ в разработке мобильных приложений](https://example.com)"
+  Translated: "[AI in Mobile App Development](https://example.com)"
+* Original: "[**Новые возможности Swift для мобильного ИИ**](https://swift.org/news)"
+  Translated: "[**New Swift Features for Mobile AI**](https://swift.org/news)"
 
 Never remove links, URLs, or markdown formatting syntax. Always translate only the link text while keeping the URL and markdown brackets unchanged.
+
 2. **Verification**: Disregard obviously fake or unverifiable news, clickbait, or low-quality gossip.
+
 3. **Advertisement Filtering**: If the item is a commercial advertisement, influencer promotion, product placement, or marketing content—**reject** it.
-4. **Geopolitical Filter**: Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia (unless the news is critically important and globally covered).
+
+4. **Geopolitical Filter**: Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia.
+
 5. **Personal Content Filter**: Exclude personal posts, opinions, diary-like reflections, emotional reactions, jokes, or casual commentary from the channel's author.
-6. **Editorial Judgment**: Prioritize content that is relevant to developers working on Apple platforms such as iOS, macOS, or visionOS. This includes Apple ecosystem updates, developer tools, Swift-related content, App Store policies, or anything that impacts their work. Also allow broader tech topics like backend tools, AI trends, or cross-platform frameworks if they are likely to be useful or interesting for this audience. Reject content that doesn't serve the professional interests of Apple developers.
-7. **Repost Decision**: At the end, decide whether the news should be **reposted** or **rejected**, and explain why in 1–2 sentences.
+
+6. **Editorial Judgment**: Prioritize **only** content directly related to **AI in mobile development**. This includes:
+
+   * Large language models (LLMs) applied to mobile
+   * AI coding tools (Cursor, Copilot, Claude Code, ChatGPT, Codex, MCP)
+   * AI-driven developer tools, SDKs, frameworks for mobile
+   * AI-assisted UI/UX generation, vibe coding, automation in mobile apps
+
+   Reject all other content—even if it is about general iOS, Android, Swift, Flutter, React Native, or backend development. Those are outside the scope unless they explicitly connect to AI in mobile development.
+
+7. **Repost Decision**:
+
+   * **REPOST** only if the content is about AI in mobile development.
+   * **REJECT** everything else (including general framework updates, architectural patterns, tutorials, or non-AI articles).
+   * Always briefly explain your decision in 1–2 sentences.
