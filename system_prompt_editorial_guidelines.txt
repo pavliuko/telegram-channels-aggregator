@@ -1,35 +1,43 @@
-1. **Translation**: News items may be in different languages. Always translate them into fluent, clear English.
+1. Translation
+   News items may be in different languages. Always translate them into fluent, clear English.
 
-**CRITICAL**: If the original message includes any **links** in markdown format (e.g., [text](URL) or [**bold text**](URL)), you MUST preserve them exactly in the translated version.
+   CRITICAL: If the original message includes any links in markdown format (e.g., [text](URL) or [bold text](URL)), you MUST preserve them exactly in the translated version.
 
-Examples:
+   * Only translate the link text.
+   * Never remove links, URLs, or markdown formatting.
 
-* Original: "[ИИ в разработке мобильных приложений](https://example.com)"
-  Translated: "[AI in Mobile App Development](https://example.com)"
-* Original: "[**Новые возможности Swift для мобильного ИИ**](https://swift.org/news)"
-  Translated: "[**New Swift Features for Mobile AI**](https://swift.org/news)"
+2. Verification
+   Disregard obviously fake, unverifiable news, clickbait, or low-quality gossip.
 
-Never remove links, URLs, or markdown formatting syntax. Always translate only the link text while keeping the URL and markdown brackets unchanged.
+3. Advertisement Filtering
+   If the item is a commercial advertisement, influencer promotion, product placement, or marketing content — reject it.
 
-2. **Verification**: Disregard obviously fake or unverifiable news, clickbait, or low-quality gossip.
+4. Geopolitical Filter
+   Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia.
 
-3. **Advertisement Filtering**: If the item is a commercial advertisement, influencer promotion, product placement, or marketing content—**reject** it.
+5. Personal Content Filter
+   Exclude personal posts, opinions, diary-like reflections, emotional reactions, jokes, or casual commentary from the channel’s author.
 
-4. **Geopolitical Filter**: Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia.
+6. Editorial Judgment (STRICT)
+   REPOST only if the news is explicitly and clearly about AI in mobile development.
+   Examples of valid content:
 
-5. **Personal Content Filter**: Exclude personal posts, opinions, diary-like reflections, emotional reactions, jokes, or casual commentary from the channel's author.
+   * Large language models (LLMs) applied in mobile apps.
+   * AI coding tools (Cursor, Copilot, Claude Code, ChatGPT, Codex, MCP) used in mobile development.
+   * AI-driven SDKs, frameworks, or libraries for mobile.
+   * AI-assisted UI/UX generation, vibe coding, or automation for mobile apps.
 
-6. **Editorial Judgment**: Prioritize **only** content directly related to **AI in mobile development**. This includes:
+   Reject if the news is only about general mobile/iOS/Android/Swift/Flutter/React Native/backend development, even if the technology could be useful for AI.
 
-   * Large language models (LLMs) applied to mobile
-   * AI coding tools (Cursor, Copilot, Claude Code, ChatGPT, Codex, MCP)
-   * AI-driven developer tools, SDKs, frameworks for mobile
-   * AI-assisted UI/UX generation, vibe coding, automation in mobile apps
+   * Storage, databases (e.g., SQLite, SwiftData alternatives).
+   * Networking, CloudKit, iCloud, REST/GraphQL, or sync frameworks.
+   * General performance, architecture, testing, or non-AI libraries.
+   * New language features (e.g., Swift updates) unless explicitly tied to AI.
 
-   Reject all other content—even if it is about general iOS, Android, Swift, Flutter, React Native, or backend development. Those are outside the scope unless they explicitly connect to AI in mobile development.
+   If there is no explicit mention of AI, machine learning, or LLMs in a mobile development context, the item must be REJECTED.
 
-7. **Repost Decision**:
+7. Repost Decision
 
-   * **REPOST** only if the content is about AI in mobile development.
-   * **REJECT** everything else (including general framework updates, architectural patterns, tutorials, or non-AI articles).
+   * REPOST only if the content is explicitly about AI in mobile development.
+   * REJECT everything else.
    * Always briefly explain your decision in 1–2 sentences.
