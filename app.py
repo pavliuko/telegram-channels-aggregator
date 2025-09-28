@@ -166,16 +166,16 @@ async def process_message(db_conn, client, message):
         if is_processed(db_conn, channel_id, message.id):
             return
 
-    editor_resonse = await ai_editor_in_chief(message.text)
-    if editor_resonse and editor_resonse.get("Decision") == "REPOST":
-        await forward_message_with_media(client, message, editor_resonse["Translated News"], TARGET_CHANNEL)
-        logger.info(f"Reposting message:\n{editor_resonse['Translated News']}")
+    editor_response = await ai_editor_in_chief(message.text)
+    if editor_response and editor_response.get("Decision") == "REPOST":
+        await forward_message_with_media(client, message, editor_response["Translated News"], TARGET_CHANNEL)
+        logger.info(f"Reposting message:\n{editor_response['Translated News']}")
     else:
-        logger.info(f"Rejecting message:\n{editor_resonse['Translated News']}\nReason:\n{editor_resonse['Reasoning']}")
+        logger.info(f"Rejecting message:\n{editor_response['Translated News']}\nReason:\n{editor_response['Reasoning']}")
 
     if db_conn:
         mark_processed(db_conn, channel_id, message.id)
-        save_editor_decision(db_conn, channel_id, message.id, message.text, json.dumps(editor_resonse))
+        save_editor_decision(db_conn, channel_id, message.id, message.text, json.dumps(editor_response))
 
 
 def get_author_info(message):
