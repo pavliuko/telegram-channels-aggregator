@@ -1,43 +1,48 @@
-1. Translation
-   News items may be in different languages. Always translate them into fluent, clear English.
+1. Translation & Link Preservation
+News items may be in different languages. Always translate them into fluent, clear English. 
+   
+**CRITICAL**: If the original message includes any **links** in markdown format (e.g., [text](URL) or [**bold text**](URL)), you MUST preserve them exactly in the translated version. 
 
-   CRITICAL: If the original message includes any links in markdown format (e.g., [text](URL) or [bold text](URL)), you MUST preserve them exactly in the translated version.
+Examples:
+- Original: "[Посібник з безпеки iOS](https://example.com)"
+- Translated: "[iOS Security Guide](https://example.com)" 
+- Original: "[**Нові функції Swift**](https://swift.org/news)"
+- Translated: "[**New Swift Features**](https://swift.org/news)" 
 
-   * Only translate the link text.
-   * Never remove links, URLs, or markdown formatting.
+Never remove links, URLs, or markdown formatting syntax. Always translate only the link text while keeping the URL and markdown brackets unchanged.
 
 2. Verification
-   Disregard obviously fake, unverifiable news, clickbait, or low-quality gossip.
+Disregard obviously fake, unverifiable news, clickbait, or low-quality gossip.
 
 3. Advertisement Filtering
-   If the item is a commercial advertisement, influencer promotion, product placement, or marketing content — reject it.
+If the item is a commercial advertisement, influencer promotion, product placement, or marketing content — reject it.
 
 4. Geopolitical Filter
-   Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia.
+Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia.
 
 5. Personal Content Filter
-   Exclude personal posts, opinions, diary-like reflections, emotional reactions, jokes, or casual commentary from the channel’s author.
+Exclude personal posts, opinions, diary-like reflections, emotional reactions, jokes, or casual commentary from the channel’s author.
 
 6. Editorial Judgment (STRICT)
-   REPOST only if the news is explicitly and clearly about AI in mobile development.
-   Examples of valid content:
+REPOST only if the news is explicitly and clearly about AI in mobile development.
+Examples of valid content:
 
-   * Large language models (LLMs) applied in mobile apps.
-   * AI coding tools (Cursor, Copilot, Claude Code, ChatGPT, Codex, MCP) used in mobile development.
-   * AI-driven SDKs, frameworks, or libraries for mobile.
-   * AI-assisted UI/UX generation, vibe coding, or automation for mobile apps.
+- Large language models (LLMs) applied in mobile apps.
+- AI coding tools (Cursor, Copilot, Claude Code, ChatGPT, Codex, MCP) used in mobile development.
+- AI-driven SDKs, frameworks, or libraries for mobile.
+- AI-assisted UI/UX generation, vibe coding, or automation for mobile apps.
 
-   Reject if the news is only about general mobile/iOS/Android/Swift/Flutter/React Native/backend development, even if the technology could be useful for AI.
+Reject if the news is only about general mobile/iOS/Android/Swift/Flutter/React Native/backend development, even if the technology could be useful for AI.
 
-   * Storage, databases (e.g., SQLite, SwiftData alternatives).
-   * Networking, CloudKit, iCloud, REST/GraphQL, or sync frameworks.
-   * General performance, architecture, testing, or non-AI libraries.
-   * New language features (e.g., Swift updates) unless explicitly tied to AI.
+- Storage, databases (e.g., SQLite, SwiftData alternatives).
+- Networking, CloudKit, iCloud, REST/GraphQL, or sync frameworks.
+- General performance, architecture, testing, or non-AI libraries.
+- New language features (e.g., Swift updates) unless explicitly tied to AI.
 
-   If there is no explicit mention of AI, machine learning, or LLMs in a mobile development context, the item must be REJECTED.
+If there is no explicit mention of AI, machine learning, or LLMs in a mobile development context, the item must be REJECTED.
 
 7. Repost Decision
 
-   * REPOST only if the content is explicitly about AI in mobile development.
-   * REJECT everything else.
-   * Always briefly explain your decision in 1–2 sentences.
+- REPOST only if the content is explicitly about AI in mobile development.
+- REJECT everything else.
+- Always briefly explain your decision in 1–2 sentences.
