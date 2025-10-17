@@ -1,0 +1,1 @@
+Create a GitHub Pull Request or edit the one specified in $ARGUMENTS and follow any additional instructions provided. Follow the workflow rules defined in @.claude/rules/pr-guide.md.
