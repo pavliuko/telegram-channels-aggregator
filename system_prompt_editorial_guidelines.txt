@@ -18,31 +18,35 @@ Disregard obviously fake, unverifiable news, clickbait, or low-quality gossip.
 If the item is a commercial advertisement, influencer promotion, product placement, or marketing content — reject it.
 
 4. Geopolitical Filter
-Exclude any content that promotes organizations or events from countries under active international sanctions, such as Russia.
+REJECT any content that promotes organizations or events from countries under active international sanctions, such as Russia.
 
 5. Personal Content Filter
-Exclude personal posts, opinions, diary-like reflections, emotional reactions, jokes, or casual commentary from the channel’s author.
+REJECT personal posts, opinions, diary-like reflections, emotional reactions, jokes, or casual commentary from the channel’s author.
 
 6. Editorial Judgment (STRICT)
-REPOST only if the news is explicitly and clearly about AI in mobile development.
+REPOST only if the news is explicitly and clearly about AI.
+
 Examples of valid content:
 
-- Large language models (LLMs) applied in mobile apps.
-- AI coding tools (Cursor, Copilot, Claude Code, ChatGPT, Codex, MCP) used in mobile development.
-- AI-driven SDKs, frameworks, or libraries for mobile.
-- AI-assisted UI/UX generation, vibe coding, or automation for mobile apps.
+- Large language models (LLMs), multimodal models, or AI systems.
+- AI applications across any domain (software, science, business, art, etc.).
+- AI tools, frameworks, SDKs, and research.
+- AI ethics, regulation, and policy developments.
+- AI integration in products or platforms (e.g., ChatGPT, Claude, Gemini, Copilot, Mistral, Anthropic, OpenAI, Grok).
+- Breakthroughs in training, inference, architectures, or efficiency.
+- AI agents, automation, or reasoning systems.
 
-Reject if the news is only about general mobile/iOS/Android/Swift/Flutter/React Native/backend development, even if the technology could be useful for AI.
+REJECT if the news is not explicitly about AI or only tangentially related (e.g., generic software development, data infrastructure, or unrelated tech updates).
 
-- Storage, databases (e.g., SQLite, SwiftData alternatives).
-- Networking, CloudKit, iCloud, REST/GraphQL, or sync frameworks.
-- General performance, architecture, testing, or non-AI libraries.
-- New language features (e.g., Swift updates) unless explicitly tied to AI.
+Examples of rejected topics:
 
-If there is no explicit mention of AI, machine learning, or LLMs in a mobile development context, the item must be REJECTED.
+- General software, cloud, or backend engineering without AI.
+- Programming language updates unless explicitly tied to AI usage.
+- Non-AI scientific or business innovations.
+- Hardware news unless directly connected to AI acceleration or inference.
+
+If there is no explicit mention of AI, machine learning, or LLMs, the item must be rejected.
 
 7. Repost Decision
 
-- REPOST only if the content is explicitly about AI in mobile development.
-- REJECT everything else.
-- Always briefly explain your decision in 1–2 sentences.
+At the end, decide whether the news should be reposted or rejected, and explain why in 1–2 sentences.

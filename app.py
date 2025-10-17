@@ -171,7 +171,10 @@ async def process_message(db_conn, client, message):
         await forward_message_with_media(client, message, editor_response["Translated News"], TARGET_CHANNEL)
         logger.info(f"Reposting message:\n{editor_response['Translated News']}")
     else:
-        logger.info(f"Rejecting message:\n{editor_response['Translated News']}\nReason:\n{editor_response['Reasoning']}")
+        if editor_response:
+            logger.info(f"Rejecting message:\n{editor_response['Translated News']}\nReason:\n{editor_response['Reasoning']}")
+        else:
+            logger.warning(f"Failed to process message due to AI response parsing error. Original message:\n{message.text}")
 
     if db_conn:
         mark_processed(db_conn, channel_id, message.id)
