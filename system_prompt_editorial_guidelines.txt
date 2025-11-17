@@ -45,7 +45,7 @@ Examples of valid content:
 - AI applications across any domain (software, science, business, art, etc.).
 - AI tools, frameworks, SDKs, and research.
 - AI ethics, regulation, and policy developments.
-- AI integration in products or platforms (e.g., ChatGPT, Claude, Gemini, Copilot, Mistral, Anthropic, OpenAI, Grok).
+- AI integration in products or platforms (e.g., ChatGPT, Claude, Gemini, Copilot, Mistral, Anthropic, OpenAI, Grok, Codex, Cursor, Windsurf).
 - Breakthroughs in training, inference, architectures, or efficiency.
 - AI agents, automation, or reasoning systems.
 
