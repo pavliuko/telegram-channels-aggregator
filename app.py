@@ -121,17 +121,18 @@ async def forward_message_with_media(client, original_message, translated_text, 
             await client.send_file(
                 target_channel,
                 original_message.media,
-                caption=formatted_text
+                caption=formatted_text,
+                parse_mode='html'
             )
         except Exception as e:
             logger.warning(f"Error forwarding media: {e}")
             # Fallback: send text only if media forwarding fails
-            await client.send_message(target_channel, formatted_text)
+            await client.send_message(target_channel, formatted_text, parse_mode='html')
     else:
         if len(formatted_text) > 4096:
             logger.warning(f"Message too long: {formatted_text}, skipping")
         else:
-            await client.send_message(target_channel, formatted_text)
+            await client.send_message(target_channel, formatted_text, parse_mode='html')
 
 
 async def main():
