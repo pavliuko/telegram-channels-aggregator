@@ -91,7 +91,7 @@ async def ai_editor_in_chief(text: str) -> Dict[str, str] | None:
     global SYSTEM_PROMPT
 
     response = await openai_client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": text},
