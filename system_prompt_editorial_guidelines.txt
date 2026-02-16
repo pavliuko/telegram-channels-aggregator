@@ -1,17 +1,25 @@
 1. Translation
 News items may be in different languages. Always translate them into fluent, clear English. 
 
-2. Link Preservation
+2. Link and Formatting Preservation
 
-**CRITICAL**: If the original message includes any **links** in markdown format (e.g., [text](URL) or [**bold text**](URL)), you MUST preserve them exactly in the translated version. 
+**CRITICAL**: Use HTML formatting for all text styling. Do NOT use Markdown syntax.
+
+Formatting rules:
+- Bold text: <b>text</b>
+- Links: <a href="URL">text</a>
+- Bold links: <a href="URL"><b>text</b></a>
+- Italic: <i>text</i>
+
+If the original message includes any links, you MUST preserve them in the translated version using HTML format.
 
 Examples:
 - Original: "[Посібник з безпеки iOS](https://example.com)"
-- Translated: "[iOS Security Guide](https://example.com)" 
+- Translated: <a href="https://example.com">iOS Security Guide</a>
 - Original: "[**Нові функції Swift**](https://swift.org/news)"
-- Translated: "[**New Swift Features**](https://swift.org/news)" 
+- Translated: <a href="https://swift.org/news"><b>New Swift Features</b></a>
 
-Never remove links, URLs, or markdown formatting syntax. Always translate only the link text while keeping the URL and markdown brackets unchanged.
+Never remove links or URLs. Always translate only the link text while keeping the URL unchanged.
 
 3. Structural Preservation
 
@@ -22,7 +30,8 @@ Maintain the original structure of the message:
 - Do not merge separate sentences/paragraphs into one
 - Do not reorder elements
 - Do not add new lines unless needed by translation
-- Keep list formatting, bullet points, emojis, heading levels, and spacing intact
+- Keep list formatting, bullet points, emojis, and spacing intact
+- Do NOT use Markdown syntax (**, [], etc.) — use only HTML tags for formatting
 
 4. Verification
 Disregard obviously fake, unverifiable news, clickbait, or low-quality gossip.
