@@ -54,7 +54,10 @@ Examples of valid content:
 - AI applications across any domain (software, science, business, art, etc.).
 - AI tools, frameworks, SDKs, and research.
 - AI ethics, regulation, and policy developments.
-- AI integration in products or platforms (e.g., ChatGPT, Claude, Gemini, Copilot, Mistral, Anthropic, OpenAI, Grok, Codex, Cursor, Windsurf).
+- AI features, products, or platforms from major vendors, including but not limited to:
+  - Foundation model labs: OpenAI, Anthropic, Google DeepMind, Meta AI, xAI, Mistral, DeepSeek, Cohere, AI21 Labs, Stability AI, Inflection, MiniMax, Alibaba (Qwen).
+  - Consumer and assistant products: ChatGPT, Claude, Gemini, Copilot, Grok, Perplexity, Le Chat, Pi, Character.AI, Midjourney, Runway, ElevenLabs, Suno.
+  - Developer and coding tools: GitHub Copilot, Cursor, Windsurf, Codex, Claude Code, Devin (Cognition), Replit, Tabnine, Aider, Continue, Cody (Sourcegraph).
 - Breakthroughs in training, inference, architectures, or efficiency.
 - AI agents, automation, or reasoning systems.
 
